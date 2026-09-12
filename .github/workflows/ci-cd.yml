@@ -33,14 +33,18 @@ jobs:
       - name: Build Next.js app
         run: npm run build
 
-      - name: Validate Helm chart
+      - name: Install kubeconform
         run: |
-          helm lint study-planner-chart
-          helm template study-planner study-planner-chart > /dev/null
+          curl -sL https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-amd64.tar.gz | sudo tar -xz -C /usr/local/bin
 
-      - name: Validate raw Kubernetes manifests
+      - name: Validate Helm chart
+        run: helm lint study-planner-chart
+
+      - name: Validate Kubernetes manifests
         run: |
-          kubectl create --dry-run=client -f k8s -o name
+          kubeconform -summary k8s/
+          helm template study-planner study-planner-chart > /tmp/chart-rendered.yaml
+          kubeconform -summary /tmp/chart-rendered.yaml
 
   cd:
     name: Build & publish container image

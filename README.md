@@ -16,8 +16,9 @@ Built to demonstrate a practical, end-to-end infrastructure setup — not a comp
 |---|---|
 | Multi-stage Docker build | `node:22-alpine` deps → build → production runner as non-root `nextjs` user |
 | Kubernetes manifests | Deployment (probes, resource limits, downward API), Service, Ingress, ConfigMap |
+| Manifest validation | `kubeconform` validates raw `k8s/` manifests and Helm-rendered output offline |
 | Helm chart | Parameterised templates, reusable helpers, values-driven configuration |
-| GitHub Actions CI/CD | Lint + build + Helm lint on every commit; build + push container image on merge to `master` |
+| GitHub Actions CI/CD | Lint + build + manifest validation on every commit; build + push container image on merge to `master` |
 | Container image publishing | GitHub Container Registry with SHA-pinned and `latest` tags, GitHub Actions cache |
 
 ---
@@ -131,7 +132,7 @@ push / PR
 ┌────────────────────────────────────────────┐
 │ CI (lint, build & validate)                │
 │  npm ci → lint → next build                │
-│  helm lint + helm template                 │
+│  helm lint + kubeconform (raw + rendered)  │
 └────────────────────────────────────────────┘
   │
   ▼  (master only)
