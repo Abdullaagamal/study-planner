@@ -1,33 +1,48 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: study-planner-deployment
+  name: {{ include "study-planner-chart.fullname" . }}
+  labels:
+    app: {{ include "study-planner-chart.name" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: study-planner
+      app: {{ include "study-planner-chart.name" . }}
   template:
     metadata:
       labels:
-        app: study-planner
+        app: {{ include "study-planner-chart.name" . }}
     spec:
       containers:
-      - name: study-planner-container
+      - name: {{ include "study-planner-chart.name" . }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: Never
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 3000
         envFrom:
         - configMapRef:
-            name: study-planner-config
+            name: {{ include "study-planner-chart.fullname" . }}-config
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         resources:
           requests:
-            cpu: "100m"
-            memory: "128Mi"
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
           limits:
-            cpu: "250m"
-            memory: "256Mi"
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
         livenessProbe:
           httpGet:
             path: /

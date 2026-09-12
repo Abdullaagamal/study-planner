@@ -1,12 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: study-planner-service
+  name: {{ include "study-planner-chart.fullname" . }}
 spec:
-  type: NodePort
+  type: {{ .Values.service.type }}
   selector:
-    app: study-planner
+    app: {{ include "study-planner-chart.name" . }}
   ports:
-    - port: 3000
+    - port: {{ .Values.service.port }}
       targetPort: 3000
-      nodePort: 30000
+      {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.nodePort }}
+      {{- end }}

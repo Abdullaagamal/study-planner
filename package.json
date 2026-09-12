@@ -1,15 +1,24 @@
 {
   "name": "study-planner",
   "version": "1.0.0",
+  "description": "Study Planner dashboard deployed through a full Docker + Kubernetes + Helm + GitHub Actions pipeline.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint ."
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.9.0"
   },
   "dependencies": {
-    "next": "14.2.3",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "@supabase/supabase-js": "^2.43.4"
+    "next": "^16.3.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.5"
   }
 }
