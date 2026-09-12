@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: study-planner-deployment
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: study-planner
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: study-planner-container
-        image: study-planner:latest
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: Never
         ports:
         - containerPort: 3000

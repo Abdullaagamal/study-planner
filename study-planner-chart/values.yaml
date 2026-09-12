@@ -1,0 +1,6 @@
+replicaCount: 1
+image:
+  repository: study-planner
+  tag: latest
+ingress:
+  host: studyplanner.local
